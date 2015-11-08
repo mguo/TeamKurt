@@ -47,9 +47,9 @@ public final class TranslateAsyncTask extends AsyncTask<String, String, Boolean>
     this.sourceLanguageCode = sourceLanguageCode;
     this.targetLanguageCode = targetLanguageCode;
     this.sourceText = sourceText;
-    textView = (TextView) activity.findViewById(R.id.translation_text_view);
+    //textView = (TextView) activity.findViewById(R.id.translation_text_view);
     progressView = (View) activity.findViewById(R.id.indeterminate_progress_indicator_view);
-    targetLanguageTextView = (TextView) activity.findViewById(R.id.translation_language_text_view);
+//    targetLanguageTextView = (TextView) activity.findViewById(R.id.translation_language_text_view);
   }
   
   @Override

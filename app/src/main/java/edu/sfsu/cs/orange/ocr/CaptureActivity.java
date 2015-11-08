@@ -35,6 +35,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -545,6 +548,19 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         cameraManager.requestAutoFocus(500L);
       }
       return true;
+    } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+      if (isContinuousModeActive) {
+        onShutterButtonPressContinuous();
+      } else {
+        handler.hardwareShutterButtonClick();
+      }
+    }
+      else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+      if (isContinuousModeActive) {
+        onShutterButtonPressContinuous();
+      } else {
+        handler.hardwareShutterButtonClick();
+      }
     }
     return super.onKeyDown(keyCode, event);
   }
@@ -554,7 +570,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     //    MenuInflater inflater = getMenuInflater();
     //    inflater.inflate(R.menu.options_menu, menu);
     super.onCreateOptionsMenu(menu);
-    menu.add(0, SETTINGS_ID, 0, "Settings").setIcon(android.R.drawable.ic_menu_preferences);
+      menu.add(0, SETTINGS_ID, 0, "Settings").setIcon(android.R.drawable.ic_menu_preferences);
     menu.add(0, ABOUT_ID, 0, "About").setIcon(android.R.drawable.ic_menu_info_details);
     return true;
   }
@@ -734,6 +750,13 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
       Toast toast = Toast.makeText(this, "OCR failed. Please try again.", Toast.LENGTH_SHORT);
       toast.setGravity(Gravity.TOP, 0, 0);
       toast.show();
+      try {
+        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+        r.play();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
       return false;
     }
     
@@ -763,7 +786,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     int scaledSize = Math.max(22, 32 - ocrResult.getText().length() / 4);
     ocrResultTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, scaledSize);
 
-    speakOut();
+    speakOut(ocrResultView.getText().toString());
 //    TextView translationLanguageLabelTextView = (TextView) findViewById(R.id.translation_language_label_text_view);
 //    TextView translationLanguageTextView = (TextView) findViewById(R.id.translation_language_text_view);
 //    TextView translationTextView = (TextView) findViewById(R.id.translation_text_view);
@@ -1243,7 +1266,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
               || result == TextToSpeech.LANG_NOT_SUPPORTED) {
         Log.e("TTS", "This Language is not supported");
       } else {
-        speakOut();
+        speakOut(ocrResultView.getText().toString());
       }
 
     } else {
@@ -1251,10 +1274,10 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     }
   }
 
-  private void speakOut() {
-
-    String text = ocrResultView.getText().toString();
+  private void speakOut(String text) {
 
     tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+
+    onResume();
   }
 }

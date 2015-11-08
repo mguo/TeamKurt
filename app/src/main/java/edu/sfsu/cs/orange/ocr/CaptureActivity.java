@@ -565,34 +565,34 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     return super.onKeyDown(keyCode, event);
   }
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    //    MenuInflater inflater = getMenuInflater();
-    //    inflater.inflate(R.menu.options_menu, menu);
-    super.onCreateOptionsMenu(menu);
-      menu.add(0, SETTINGS_ID, 0, "Settings").setIcon(android.R.drawable.ic_menu_preferences);
-    menu.add(0, ABOUT_ID, 0, "About").setIcon(android.R.drawable.ic_menu_info_details);
-    return true;
-  }
+//  @Override
+//  public boolean onCreateOptionsMenu(Menu menu) {
+//    //    MenuInflater inflater = getMenuInflater();
+//    //    inflater.inflate(R.menu.options_menu, menu);
+//    super.onCreateOptionsMenu(menu);
+//      menu.add(0, SETTINGS_ID, 0, "Settings").setIcon(android.R.drawable.ic_menu_preferences);
+//    menu.add(0, ABOUT_ID, 0, "About").setIcon(android.R.drawable.ic_menu_info_details);
+//    return true;
+//  }
 
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    Intent intent;
-    switch (item.getItemId()) {
-    case SETTINGS_ID: {
-      intent = new Intent().setClass(this, PreferencesActivity.class);
-      startActivity(intent);
-      break;
-    }
-    case ABOUT_ID: {
-      intent = new Intent(this, HelpActivity.class);
-      intent.putExtra(HelpActivity.REQUESTED_PAGE_KEY, HelpActivity.ABOUT_PAGE);
-      startActivity(intent);
-      break;
-    }
-    }
-    return super.onOptionsItemSelected(item);
-  }
+//  @Override
+//  public boolean onOptionsItemSelected(MenuItem item) {
+//    Intent intent;
+//    switch (item.getItemId()) {
+//    case SETTINGS_ID: {
+//      intent = new Intent().setClass(this, PreferencesActivity.class);
+//      startActivity(intent);
+//      break;
+//    }
+//    case ABOUT_ID: {
+//      intent = new Intent(this, HelpActivity.class);
+//      intent.putExtra(HelpActivity.REQUESTED_PAGE_KEY, HelpActivity.ABOUT_PAGE);
+//      startActivity(intent);
+//      break;
+//    }
+//    }
+//    return super.onOptionsItemSelected(item);
+//  }
 
   public void surfaceDestroyed(SurfaceHolder holder) {
     hasSurface = false;

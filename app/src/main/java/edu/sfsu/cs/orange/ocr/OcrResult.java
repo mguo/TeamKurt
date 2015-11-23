@@ -19,10 +19,12 @@ import java.util.List;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.media.ExifInterface;
 
 /**
  * Encapsulates the result of OCR.
@@ -150,6 +152,38 @@ public class OcrResult {
   }
   
   public void setBitmap(Bitmap bitmap) {
+//    // _path = path to the image to be OCRed
+//    ExifInterface exif = new ExifInterface(_path);
+//    int exifOrientation = exif.getAttributeInt(
+//            ExifInterface.TAG_ORIENTATION,
+//            ExifInterface.ORIENTATION_NORMAL);
+//
+//    int rotate = 0;
+//
+//    switch (exifOrientation) {
+//      case ExifInterface.ORIENTATION_ROTATE_90:
+//        rotate = 90;
+//        break;
+//      case ExifInterface.ORIENTATION_ROTATE_180:
+//        rotate = 180;
+//        break;
+//      case ExifInterface.ORIENTATION_ROTATE_270:
+//        rotate = 270;
+//        break;
+//    }
+//
+//    if (rotate != 0) {
+//      int w = bitmap.getWidth();
+//      int h = bitmap.getHeight();
+//
+//      // Setting pre rotate
+//      Matrix mtx = new Matrix();
+//      mtx.preRotate(rotate);
+//
+//      // Rotating Bitmap & convert to ARGB_8888, required by tess
+//      bitmap = Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, false);
+//    }
+//    bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
     this.bitmap = bitmap;
   }
   

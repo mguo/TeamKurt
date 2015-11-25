@@ -189,8 +189,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
   private String sourceLanguageCodeTranslation; // ISO 639-1 language code
   private String targetLanguageCodeTranslation; // ISO 639-1 language code
   private String targetLanguageReadable; // Language name, for example, "English"
-  private int pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_AUTO_OSD;
-  private int ocrEngineMode = TessBaseAPI.OEM_TESSERACT_ONLY;
+  private int pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SINGLE_CHAR;
+  private int ocrEngineMode = TessBaseAPI.OEM_TESSERACT_CUBE_COMBINED;
   private String characterBlacklist;
   private String characterWhitelist;
   private ShutterButton shutterButton;
@@ -1129,40 +1129,40 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         isContinuousModeActive = false;
       }
 
-      // Retrieve from preferences, and set in this Activity, the page segmentation mode preference
-      String[] pageSegmentationModes = getResources().getStringArray(R.array.pagesegmentationmodes);
-      String pageSegmentationModeName = prefs.getString(PreferencesActivity.KEY_PAGE_SEGMENTATION_MODE, pageSegmentationModes[0]);
-      if (pageSegmentationModeName.equals(pageSegmentationModes[0])) {
-        pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_AUTO_OSD;
-      } else if (pageSegmentationModeName.equals(pageSegmentationModes[1])) {
-        pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_AUTO;
-      } else if (pageSegmentationModeName.equals(pageSegmentationModes[2])) {
-        pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SINGLE_BLOCK;
-      } else if (pageSegmentationModeName.equals(pageSegmentationModes[3])) {
-        pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SINGLE_CHAR;
-      } else if (pageSegmentationModeName.equals(pageSegmentationModes[4])) {
-        pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SINGLE_COLUMN;
-      } else if (pageSegmentationModeName.equals(pageSegmentationModes[5])) {
-        pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SINGLE_LINE;
-      } else if (pageSegmentationModeName.equals(pageSegmentationModes[6])) {
-        pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SINGLE_WORD;
-      } else if (pageSegmentationModeName.equals(pageSegmentationModes[7])) {
-        pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SINGLE_BLOCK_VERT_TEXT;
-      } else if (pageSegmentationModeName.equals(pageSegmentationModes[8])) {
-        pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SPARSE_TEXT;
-      }
-      
-      // Retrieve from preferences, and set in this Activity, the OCR engine mode
-      String[] ocrEngineModes = getResources().getStringArray(R.array.ocrenginemodes);
-      String ocrEngineModeName = prefs.getString(PreferencesActivity.KEY_OCR_ENGINE_MODE, ocrEngineModes[0]);
-      if (ocrEngineModeName.equals(ocrEngineModes[0])) {
-        ocrEngineMode = TessBaseAPI.OEM_TESSERACT_ONLY;
-      } else if (ocrEngineModeName.equals(ocrEngineModes[1])) {
-        ocrEngineMode = TessBaseAPI.OEM_CUBE_ONLY;
-      } else if (ocrEngineModeName.equals(ocrEngineModes[2])) {
-        ocrEngineMode = TessBaseAPI.OEM_TESSERACT_CUBE_COMBINED;
-      }
-      
+//      // Retrieve from preferences, and set in this Activity, the page segmentation mode preference
+//      String[] pageSegmentationModes = getResources().getStringArray(R.array.pagesegmentationmodes);
+//      String pageSegmentationModeName = prefs.getString(PreferencesActivity.KEY_PAGE_SEGMENTATION_MODE, pageSegmentationModes[0]);
+//      if (pageSegmentationModeName.equals(pageSegmentationModes[0])) {
+//        pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_AUTO_OSD;
+//      } else if (pageSegmentationModeName.equals(pageSegmentationModes[1])) {
+//        pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_AUTO;
+//      } else if (pageSegmentationModeName.equals(pageSegmentationModes[2])) {
+//        pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SINGLE_BLOCK;
+//      } else if (pageSegmentationModeName.equals(pageSegmentationModes[3])) {
+//        pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SINGLE_CHAR;
+//      } else if (pageSegmentationModeName.equals(pageSegmentationModes[4])) {
+//        pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SINGLE_COLUMN;
+//      } else if (pageSegmentationModeName.equals(pageSegmentationModes[5])) {
+//        pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SINGLE_LINE;
+//      } else if (pageSegmentationModeName.equals(pageSegmentationModes[6])) {
+//        pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SINGLE_WORD;
+//      } else if (pageSegmentationModeName.equals(pageSegmentationModes[7])) {
+//        pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SINGLE_BLOCK_VERT_TEXT;
+//      } else if (pageSegmentationModeName.equals(pageSegmentationModes[8])) {
+//        pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SPARSE_TEXT;
+//      }
+//
+//      // Retrieve from preferences, and set in this Activity, the OCR engine mode
+//      String[] ocrEngineModes = getResources().getStringArray(R.array.ocrenginemodes);
+//      String ocrEngineModeName = prefs.getString(PreferencesActivity.KEY_OCR_ENGINE_MODE, ocrEngineModes[0]);
+//      if (ocrEngineModeName.equals(ocrEngineModes[0])) {
+//        ocrEngineMode = TessBaseAPI.OEM_TESSERACT_ONLY;
+//      } else if (ocrEngineModeName.equals(ocrEngineModes[1])) {
+//        ocrEngineMode = TessBaseAPI.OEM_CUBE_ONLY;
+//      } else if (ocrEngineModeName.equals(ocrEngineModes[2])) {
+//        ocrEngineMode = TessBaseAPI.OEM_TESSERACT_CUBE_COMBINED;
+//      }
+//
       // Retrieve from preferences, and set in this Activity, the character blacklist and whitelist
       characterBlacklist = OcrCharacterHelper.getBlacklist(prefs, sourceLanguageCodeOcr);
       characterWhitelist = OcrCharacterHelper.getWhitelist(prefs, sourceLanguageCodeOcr);

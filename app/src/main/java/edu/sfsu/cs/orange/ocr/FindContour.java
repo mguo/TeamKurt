@@ -70,7 +70,7 @@ public class FindContour {
         findButtons();
     }
 
-    public void findText() {
+    public ArrayList<Mat> findText() {
         // Read image
         Mat imageGray = new Mat();
         Mat imageEdged = new Mat();
@@ -100,7 +100,52 @@ public class FindContour {
         }
         Imgproc.drawContours(image,contours,0,new Scalar(0,255,0),5);
 
-        // TODO Pass 2: Find outermost contour
+        // Pass 2: Find rectangle bounds
+        ArrayList<org.opencv.core.Rect> rectangles = new ArrayList<>();
+        for (int i=0; i<contours.size(); i++) {
+            MatOfPoint contour = contours.get(i);
+            org.opencv.core.Rect rect = Imgproc.boundingRect(contour);
+            rectangles.add(rect);
+        }
+        Imgproc.drawContours(image, contours, 0, new Scalar(0,0,255),5);
+
+        // Pass 3: Find contiguous rectangle bounds
+        ArrayList<Mat> croppedImages = new ArrayList<>();
+        org.opencv.core.Rect refRect = rectangles.get(0);
+        double heightMargin = 0.3;
+        double upperBound = refRect.y + (heightMargin*refRect.height);
+        double lowerBound = (refRect.y - refRect.height) - (heightMargin*refRect.height);
+        ArrayList<org.opencv.core.Rect> textRectangles = new ArrayList<>();
+
+        for (int i=0; i<rectangles.size(); i++) {
+            org.opencv.core.Rect checkRect = rectangles.get(i);
+            double checkRectTop = checkRect.y;
+            double checkRectBottom = checkRect.y - checkRect.height;
+
+            // Check if falls within bounds
+            if (checkRectTop <= upperBound && checkRectBottom >= lowerBound) {
+                textRectangles.add(checkRect);
+            } else {
+                // Crop image and add to array
+                double leftBound = refRect.x;
+                double rightBound = checkRect.x;
+                double width = rightBound - leftBound;
+                int cropX = (int)(leftBound - (0.3*width));
+                int cropY = (int)upperBound;
+                int cropWidth = (int)(1.6*width);
+                int cropHeight = (int)(upperBound - lowerBound);
+                org.opencv.core.Rect cropRect = new org.opencv.core.Rect(cropX,cropY,cropWidth,cropHeight);
+                Mat croppedImage = new Mat(image,cropRect);
+                croppedImages.add(croppedImage);
+
+                // Reset upper and lower bounds
+                refRect = checkRect;
+                upperBound = checkRect.y + (heightMargin*checkRect.height);
+                lowerBound = (checkRect.y - checkRect.height) - (heightMargin*checkRect.height);
+            }
+        }
+
+        return croppedImages;
     }
 
     public void findButtons() {

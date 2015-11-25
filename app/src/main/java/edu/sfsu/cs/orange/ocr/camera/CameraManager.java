@@ -26,10 +26,13 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.SurfaceHolder;
+
+import edu.sfsu.cs.orange.ocr.FindContour;
 import edu.sfsu.cs.orange.ocr.PlanarYUVLuminanceSource;
 import edu.sfsu.cs.orange.ocr.PreferencesActivity;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * This object wraps the Camera service object and expects to be the only one talking to it. The
@@ -200,6 +203,11 @@ public final class CameraManager {
       int topOffset = (screenResolution.y - height) / 2;
       framingRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + height);
     }
+
+    Log.v("MyActivity", "ALERT!!!: In getFramingRect");
+    FindContour contourFinder = new FindContour("ebt_screen1.jpg");
+    ArrayList<int[]> textBounds = new FindContour("ebt_screen1.jpg").findText();
+
     return framingRect;
   }
 

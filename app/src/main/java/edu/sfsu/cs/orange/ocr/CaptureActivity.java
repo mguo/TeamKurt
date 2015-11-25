@@ -19,6 +19,7 @@ package edu.sfsu.cs.orange.ocr;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -218,6 +219,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
   
   @Override
   public void onCreate(Bundle icicle) {
+
     super.onCreate(icicle);
     tts = new TextToSpeech(this, this);
     checkFirstLaunch();
@@ -411,6 +413,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
   
   /** Called when the shutter button is pressed in continuous mode. */
   void onShutterButtonPressContinuous() {
+
     isPaused = true;
     handler.stop();  
     beepManager.playBeepSoundAndVibrate();

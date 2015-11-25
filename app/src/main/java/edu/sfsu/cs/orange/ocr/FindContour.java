@@ -66,15 +66,24 @@ public class FindContour {
 
     public FindContour(String im_name) {
         this.image_name = im_name;
-        findText();
-        findButtons();
+        Log.v("MyActivity", "In FindContour constructor with image name: " + this.image_name);
+        // findButtons();
     }
 
-    public ArrayList<Mat> findText() {
+    public ArrayList<int[]> findText() {
         // Read image
+        Log.v("MyActivity", "In findText method");
+        if (!OpenCVLoader.initDebug()) {
+            Log.v("MyActivity", "Loading OpenCV...");
+        }
+        Mat image = Highgui.imread(image_name, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+        Boolean bool = Highgui.imwrite("c:/NVPACK/TeamKurt/Test1_Image1.jpg", image);
+        if (bool == true)
+            Log.v("MyActivity", "SUCCESS reading image 1");
+        else
+            Log.v("MyActivity", "FAILED reading image 1");
         Mat imageGray = new Mat();
         Mat imageEdged = new Mat();
-        Mat image = Highgui.imread(image_name, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
         // Convert to gray scale
         Imgproc.cvtColor(image, imageGray, Imgproc.COLOR_BGR2GRAY);
         // Find edges in image
@@ -110,12 +119,17 @@ public class FindContour {
         Imgproc.drawContours(image, contours, 0, new Scalar(0,0,255),5);
 
         // Pass 3: Find contiguous rectangle bounds
-        ArrayList<Mat> croppedImages = new ArrayList<>();
         org.opencv.core.Rect refRect = rectangles.get(0);
         double heightMargin = 0.3;
         double upperBound = refRect.y + (heightMargin*refRect.height);
         double lowerBound = (refRect.y - refRect.height) - (heightMargin*refRect.height);
         ArrayList<org.opencv.core.Rect> textRectangles = new ArrayList<>();
+
+        // Cropped image
+        // ArrayList<Mat> croppedImages = new ArrayList<>();
+
+        // Rectangle points
+        ArrayList<int[]> rectPoints = new ArrayList<int[]>();
 
         for (int i=0; i<rectangles.size(); i++) {
             org.opencv.core.Rect checkRect = rectangles.get(i);
@@ -134,9 +148,15 @@ public class FindContour {
                 int cropY = (int)upperBound;
                 int cropWidth = (int)(1.6*width);
                 int cropHeight = (int)(upperBound - lowerBound);
-                org.opencv.core.Rect cropRect = new org.opencv.core.Rect(cropX,cropY,cropWidth,cropHeight);
-                Mat croppedImage = new Mat(image,cropRect);
-                croppedImages.add(croppedImage);
+
+                // Cropping image
+                // org.opencv.core.Rect cropRect = new org.opencv.core.Rect(cropX,cropY,cropWidth,cropHeight);
+                // Mat croppedImage = new Mat(image,cropRect);
+                // croppedImages.add(croppedImage);
+
+                // Drawing image
+                Core.rectangle(image, new Point(cropX, cropY), new Point(cropX + cropWidth, cropY + cropHeight), new Scalar(255,0,0));
+                rectPoints.add(new int[]{cropX, cropY, cropWidth, cropHeight});
 
                 // Reset upper and lower bounds
                 refRect = checkRect;
@@ -145,7 +165,16 @@ public class FindContour {
             }
         }
 
-        return croppedImages;
+        // Save image
+        String filename = "/c:/NVPACK/TeamKurt/Test1.jpg";
+        bool = Highgui.imwrite(filename, image);
+        if (bool == true)
+            Log.v("MyActivity", "SUCCESS: wrote image");
+        else
+            Log.v("MyActivity", "FAILED: didn't write image");
+
+        // return croppedImages;
+        return rectPoints;
     }
 
     public void findButtons() {

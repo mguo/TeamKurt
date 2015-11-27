@@ -40,6 +40,10 @@ final class PreviewCallback implements Camera.PreviewCallback {
     this.configManager = configManager;
   }
 
+  Handler getHandler() {
+    return this.previewHandler;
+  }
+
   void setHandler(Handler previewHandler, int previewMessage) {
     this.previewHandler = previewHandler;
     this.previewMessage = previewMessage;

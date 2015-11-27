@@ -36,7 +36,7 @@ import android.util.Log;
  * 
  * The code for this class was adapted from the ZXing project: http://code.google.com/p/zxing/
  */
-final class DecodeHandler extends Handler {
+public final class DecodeHandler extends Handler {
 
   private final CaptureActivity activity;
   private boolean running = true;
@@ -51,6 +51,10 @@ final class DecodeHandler extends Handler {
     baseApi = activity.getBaseApi();
     beepManager = new BeepManager(activity);
     beepManager.updatePrefs();
+  }
+
+  public Bitmap getBitmap() {
+    return bitmap;
   }
 
   @Override

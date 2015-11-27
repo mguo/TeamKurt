@@ -19,6 +19,7 @@ package edu.sfsu.cs.orange.ocr.camera;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
@@ -27,6 +28,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
+import edu.sfsu.cs.orange.ocr.DecodeHandler;
 import edu.sfsu.cs.orange.ocr.FindContour;
 import edu.sfsu.cs.orange.ocr.PlanarYUVLuminanceSource;
 import edu.sfsu.cs.orange.ocr.PreferencesActivity;
@@ -159,6 +161,14 @@ public final class CameraManager {
     if (theCamera != null && previewing) {
       previewCallback.setHandler(handler, message);
       theCamera.setOneShotPreviewCallback(previewCallback);
+
+      // Call FindContour
+//      Log.v("MyActivity", "ALERT!!!: Calling FindContour");
+//      DecodeHandler cameraHandler = (DecodeHandler)previewCallback.getHandler();
+//      Bitmap bmp = cameraHandler.getBitmap();
+//      FindContour contourFinder = new FindContour(bmp);
+//      ArrayList<int[]> textBounds = new FindContour(bmp).findText();
+
     }
   }
   
@@ -203,10 +213,6 @@ public final class CameraManager {
       int topOffset = (screenResolution.y - height) / 2;
       framingRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + height);
     }
-
-    Log.v("MyActivity", "ALERT!!!: In getFramingRect");
-    FindContour contourFinder = new FindContour("ebt_screen1.jpg");
-    ArrayList<int[]> textBounds = new FindContour("ebt_screen1.jpg").findText();
 
     return framingRect;
   }

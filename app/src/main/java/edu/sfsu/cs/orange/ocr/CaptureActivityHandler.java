@@ -21,11 +21,14 @@ import edu.sfsu.cs.orange.ocr.R;
 import edu.sfsu.cs.orange.ocr.camera.CameraManager;
 import edu.sfsu.cs.orange.ocr.OcrResult;
 
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 /**
  * This class handles all the messaging which comprises the state machine for capture.
@@ -226,6 +229,7 @@ final class CaptureActivityHandler extends Handler {
   void shutterButtonClick() {
     // Disable further clicks on this button until OCR request is finished
     activity.setShutterButtonClickable(false);
+
     ocrDecode();
   }
 

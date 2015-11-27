@@ -55,6 +55,7 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener;
 import org.opencv.core.*;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.android.Utils;
 import org.opencv.objdetect.CascadeClassifier;
 
 /**
@@ -62,11 +63,12 @@ import org.opencv.objdetect.CascadeClassifier;
  */
 public class FindContour {
 
-    private String image_name;
+    private Bitmap bmp;
 
-    public FindContour(String im_name) {
-        this.image_name = im_name;
-        Log.v("MyActivity", "In FindContour constructor with image name: " + this.image_name);
+    public FindContour(Bitmap img) {
+//        this.image_name = im_name;
+        this.bmp = img;
+        Log.v("MyActivity", "In FindContour constructor");
         // findButtons();
     }
 
@@ -76,16 +78,28 @@ public class FindContour {
         if (!OpenCVLoader.initDebug()) {
             Log.v("MyActivity", "Loading OpenCV...");
         }
-        Mat image = Highgui.imread(image_name, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
-        Boolean bool = Highgui.imwrite("c:/NVPACK/TeamKurt/Test1_Image1.jpg", image);
-        if (bool == true)
-            Log.v("MyActivity", "SUCCESS reading image 1");
-        else
-            Log.v("MyActivity", "FAILED reading image 1");
+//        String filepath = "file:///image_name";
+//        Mat image = Highgui.imread(filepath, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+//        if (!image.empty()) {
+//            Log.v("MyActivity", "Height: " + image.height() + " Width: " + image.width());
+//        } else {
+//            Log.v("MyActivity", "ERROR reading image");
+//        }
+//
+//        Boolean bool = Highgui.imwrite("Test1_Image1.jpg", image);
+//        if (bool == true)
+//            Log.v("MyActivity", "SUCCESS writing image 1");
+//        else
+//            Log.v("MyActivity", "FAILED writing image 1");
+
+        Mat image = new Mat();
+        Utils.bitmapToMat(this.bmp, image);
+
         Mat imageGray = new Mat();
         Mat imageEdged = new Mat();
         // Convert to gray scale
-        Imgproc.cvtColor(image, imageGray, Imgproc.COLOR_BGR2GRAY);
+         Imgproc.cvtColor(image, imageGray, Imgproc.COLOR_BGR2GRAY);
+//        imageGray = image;
         // Find edges in image
         Imgproc.bilateralFilter(imageGray,imageGray,11,17,17);
         Imgproc.Canny(imageGray,imageEdged,30,200);
@@ -167,7 +181,7 @@ public class FindContour {
 
         // Save image
         String filename = "/c:/NVPACK/TeamKurt/Test1.jpg";
-        bool = Highgui.imwrite(filename, image);
+        Boolean bool = Highgui.imwrite(filename, image);
         if (bool == true)
             Log.v("MyActivity", "SUCCESS: wrote image");
         else
@@ -181,6 +195,7 @@ public class FindContour {
         // Read image
         Mat imageGray = new Mat();
         Mat imageEdged = new Mat();
+        String image_name = "ebt_screen1.jpt";
         Mat image = Highgui.imread(image_name, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
         // Convert to gray scale
         Imgproc.cvtColor(image, imageGray, Imgproc.COLOR_BGR2GRAY);
@@ -192,7 +207,6 @@ public class FindContour {
         ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
         Mat hierarchy = new Mat();
         Imgproc.findContours(imageEdged, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-
 
     }
 

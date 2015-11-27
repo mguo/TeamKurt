@@ -35,6 +35,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -554,6 +555,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
       } else {
         handler.hardwareShutterButtonClick();
       }
+      return true;
     }
       else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
       if (isContinuousModeActive) {
@@ -561,6 +563,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
       } else {
         handler.hardwareShutterButtonClick();
       }
+      return true;
     }
     return super.onKeyDown(keyCode, event);
   }

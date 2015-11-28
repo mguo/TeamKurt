@@ -65,9 +65,9 @@ public class FindContour {
 
     private Bitmap bmp;
 
-    public FindContour(Bitmap img) {
+    public FindContour(Bitmap bitmap) {
 //        this.image_name = im_name;
-        this.bmp = img;
+        this.bmp = bitmap;
         Log.v("MyActivity", "In FindContour constructor");
         // findButtons();
     }
@@ -78,6 +78,11 @@ public class FindContour {
         if (!OpenCVLoader.initDebug()) {
             Log.v("MyActivity", "Loading OpenCV...");
         }
+
+
+        // Initialize width and height
+        int my_width = this.bmp.getWidth();
+        int my_height = this.bmp.getHeight();
 
         Mat image = new Mat();
         Utils.bitmapToMat(this.bmp, image);
@@ -133,39 +138,50 @@ public class FindContour {
 
         // Cropped image
         // ArrayList<Mat> croppedImages = new ArrayList<>();
-            
+        rectPoints.add(new int[]{0, 0, my_width, my_height});
         for (int i=0; i<rectangles.size(); i++) {
             org.opencv.core.Rect checkRect = rectangles.get(i);
-            double checkRectTop = checkRect.y;
-            double checkRectBottom = checkRect.y - checkRect.height;
-
-            // Check if falls within bounds
-            if (checkRectTop <= upperBound && checkRectBottom >= lowerBound) {
-                textRectangles.add(checkRect);
-            } else {
-                // Crop image and add to array
-                double leftBound = refRect.x;
-                double rightBound = checkRect.x;
-                double width = rightBound - leftBound;
-                int cropX = (int)checkRect.x; //(leftBound - (0.3*width));
-                int cropY = (int)checkRect.y; //upperBound;
-                int cropWidth = (int) checkRect.width; //(rightBound - leftBound);//(int)(1.6*width);
-                int cropHeight = (int)checkRect.height;// (upperBound - lowerBound);
-
-                // Cropping image
-                // org.opencv.core.Rect cropRect = new org.opencv.core.Rect(cropX,cropY,cropWidth,cropHeight);
-                // Mat croppedImage = new Mat(image,cropRect);
-                // croppedImages.add(croppedImage);
-
-                // Drawing image
-//                Core.rectangle(image, new Point(cropX, cropY), new Point(cropX + cropWidth, cropY + cropHeight), new Scalar(255,0,0));
-                rectPoints.add(new int[]{cropX, cropY, cropWidth, cropHeight});
-
-                // Reset upper and lower bounds
-                refRect = checkRect;
-                upperBound = checkRect.y + (heightMargin*checkRect.height);
-                lowerBound = (checkRect.y - checkRect.height) - (heightMargin*checkRect.height);
+            int cropX = (int)checkRect.x;
+            int cropY = (int)checkRect.y;
+            int cropWidth = (int) checkRect.width;
+            int cropHeight = (int)checkRect.height;
+            if (cropWidth > 0 && cropHeight > 0){
+                if (cropWidth + cropX < my_width && cropHeight + cropY < my_height){
+                    if (cropWidth > 20 && cropHeight > 20){
+                        rectPoints.add(new int[]{cropX, cropY, cropWidth, cropHeight});
+                    }
+                }
             }
+//            double checkRectTop = checkRect.y;
+//            double checkRectBottom = checkRect.y - checkRect.height;
+//
+//                // Check if falls within bounds
+//                if (checkRectTop <= upperBound && checkRectBottom >= lowerBound) {
+//                    textRectangles.add(checkRect);
+//            } else {
+//                // Crop image and add to array
+//                double leftBound = refRect.x;
+//                double rightBound = checkRect.x;
+//                double width = rightBound - leftBound;
+//                int cropX = (int)checkRect.x; //(leftBound - (0.3*width));
+//                int cropY = (int)checkRect.y; //upperBound;
+//                int cropWidth = (int) checkRect.width; //(rightBound - leftBound);//(int)(1.6*width);
+//                int cropHeight = (int)checkRect.height;// (upperBound - lowerBound);
+//
+//                // Cropping image
+//                // org.opencv.core.Rect cropRect = new org.opencv.core.Rect(cropX,cropY,cropWidth,cropHeight);
+//                // Mat croppedImage = new Mat(image,cropRect);
+//                // croppedImages.add(croppedImage);
+//
+//                // Drawing image
+////                Core.rectangle(image, new Point(cropX, cropY), new Point(cropX + cropWidth, cropY + cropHeight), new Scalar(255,0,0));
+//                rectPoints.add(new int[]{cropX, cropY, cropWidth, cropHeight});
+//
+//                // Reset upper and lower bounds
+//                refRect = checkRect;
+//                upperBound = checkRect.y + (heightMargin*checkRect.height);
+//                lowerBound = (checkRect.y - checkRect.height) - (heightMargin*checkRect.height);
+//            }
         }
         }
 //        // Save image
@@ -180,6 +196,7 @@ public class FindContour {
         return rectPoints;
     }
 
+    private boolean validRect()
     public void findButtons() {
         // Read image
         Mat imageGray = new Mat();

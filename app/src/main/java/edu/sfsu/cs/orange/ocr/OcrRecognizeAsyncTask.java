@@ -102,6 +102,8 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
     try {
       StringBuilder stringBuilder = new StringBuilder();
+
+      int margin = 3;
       for(int i=0; i< num_boxes; i++){
         int[] dimensions = textBounds.get(i);
         int newX = dimensions[0];
@@ -114,8 +116,9 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
         Log.v("New Y", String.valueOf(dimensions[1]));
         Log.v("New Width", String.valueOf(dimensions[2]));
         Log.v("New Height", String.valueOf(dimensions[3]));
-        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap , newX, newY, newWidth, newHeight);
+        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap , newX + margin , newY + margin , newWidth - 2*margin, newHeight - 2*margin);
         baseApi.setImage(ReadFile.readBitmap(resizedBitmap));
+//        baseApi.setRectangle(newX + margin , newY + margin , newWidth - 2*margin, newHeight - 2*margin);
         String textResultPart = baseApi.getUTF8Text();
         stringBuilder.append(textResultPart);
         stringBuilder.append(" ");

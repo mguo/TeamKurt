@@ -60,6 +60,28 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
   protected Boolean doInBackground(Void... arg0) {
     long start = System.currentTimeMillis();
     Bitmap bitmap = activity.getCameraManager().buildLuminanceSource(data, width, height).renderCroppedGreyscaleBitmap();
+
+    ArrayList<int[]> textBounds = null;
+    int num_boxes = 0;
+
+    try {
+      textBounds = new FindContour(bitmap).findText();
+      num_boxes = textBounds.size();
+    } catch (RuntimeException e) {
+      Log.e("OcrRecognizeAsyncTaskC", "Caught RuntimeException in request to Tesseract. Setting state to CONTINUOUS_STOPPED.");
+      Log.v("OcrRecognizeAsyncTaskC", String.valueOf(num_boxes));
+      e.printStackTrace();
+      try {
+        baseApi.clear();
+        activity.stopHandler();
+      } catch (NullPointerException e1) {
+        // Continue
+      }
+      return false;
+    }
+
+
+
     String textResult;
 
     //      if (PERFORM_FISHER_THRESHOLDING) {
@@ -78,9 +100,29 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
     //        bitmap = WriteFile.writeBitmap(thresholdedImage);
     //      }
 
-    try {     
-      baseApi.setImage(ReadFile.readBitmap(bitmap));
-      textResult = baseApi.getUTF8Text();
+    try {
+      StringBuilder stringBuilder = new StringBuilder();
+      for(int i=0; i< num_boxes; i++){
+        int[] dimensions = textBounds.get(i);
+        int newX = dimensions[0];
+        int newY = dimensions[1];
+        int newWidth = dimensions[2];
+        int newHeight = dimensions[3];
+        Log.v("Old Width", String.valueOf(width));
+        Log.v("Old Height", String.valueOf(height));
+        Log.v("New X", String.valueOf(dimensions[0]));
+        Log.v("New Y", String.valueOf(dimensions[1]));
+        Log.v("New Width", String.valueOf(dimensions[2]));
+        Log.v("New Height", String.valueOf(dimensions[3]));
+        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap , newX, newY, newWidth, newHeight);
+        baseApi.setImage(ReadFile.readBitmap(resizedBitmap));
+        String textResultPart = baseApi.getUTF8Text();
+        stringBuilder.append(textResultPart);
+        stringBuilder.append(" ");
+      }
+      textResult = stringBuilder.toString();
+//      baseApi.setImage(ReadFile.readBitmap(bitmap));
+//      textResult = baseApi.getUTF8Text();
       timeRequired = System.currentTimeMillis() - start;
 
       // Check for failure to recognize text

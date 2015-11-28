@@ -121,19 +121,19 @@ public class FindContour {
 //        Imgproc.drawContours(image, contours, 0, new Scalar(0,0,255),5);
 
         // Pass 3: Find contiguous rectangle bounds
+        // Rectangle points
+        ArrayList<int[]> rectPoints = new ArrayList<int[]>();
+
         if (rectangles.size() > 0 ){
             org.opencv.core.Rect refRect = rectangles.get(0);
             double heightMargin = 0.3;
             double upperBound = refRect.y + (heightMargin * refRect.height);
             double lowerBound = (refRect.y - refRect.height) - (heightMargin * refRect.height);
             ArrayList<org.opencv.core.Rect> textRectangles = new ArrayList<>();
-        }
+
         // Cropped image
         // ArrayList<Mat> croppedImages = new ArrayList<>();
-
-        // Rectangle points
-        ArrayList<int[]> rectPoints = new ArrayList<int[]>();
-
+            
         for (int i=0; i<rectangles.size(); i++) {
             org.opencv.core.Rect checkRect = rectangles.get(i);
             double checkRectTop = checkRect.y;
@@ -167,7 +167,7 @@ public class FindContour {
                 lowerBound = (checkRect.y - checkRect.height) - (heightMargin*checkRect.height);
             }
         }
-
+        }
 //        // Save image
 //        String filename = "/c:/NVPACK/TeamKurt/Test1.jpg";
 //        Boolean bool = Highgui.imwrite(filename, image);

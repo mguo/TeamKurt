@@ -2197,7 +2197,7 @@ public class Imgproc {
  *
  * @see <a href="http://docs.opencv.org/modules/imgproc/doc/structural_analysis_and_shape_descriptors.html#arclength">org.opencv.imgproc.Imgproc.arcLength</a>
  */
-    public static double arcLength(MatOfPoint2f curve, boolean closed)
+    public static double arcLength(MatOfPoint curve, boolean closed)
     {
         Mat curve_mat = curve;
         double retVal = arcLength_0(curve_mat.nativeObj, closed);
